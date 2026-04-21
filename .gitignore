@@ -1,0 +1,15 @@
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.txt
+coverage.html
+.idea/
+.vscode/
+*.swp
+.DS_Store
+.env
+.env.local
