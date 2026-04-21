@@ -5,7 +5,7 @@ Go implementation of X's algorithm scoring formula. Score draft posts for viral 
 Based on the weighted scoring formula from [xai-org/x-algorithm](https://github.com/xai-org/x-algorithm) (`home-mixer/scorers/weighted_scorer.rs`).
 
 ```
-go get github.com/teslashibe/viral-go
+go get github.com/teslashibe/x-viral-go
 ```
 
 ## Quick Start
@@ -13,7 +13,7 @@ go get github.com/teslashibe/viral-go
 ### Score a Post
 
 ```go
-import viral "github.com/teslashibe/viral-go"
+import viral "github.com/teslashibe/x-viral-go"
 
 scorer := viral.New()
 result := scorer.Score("What's the biggest lesson you've learned building in public?")
