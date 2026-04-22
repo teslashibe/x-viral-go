@@ -133,6 +133,29 @@ weights.Reply = 50.0 // increase reply importance
 scorer := viral.New(viral.WithWeights(weights))
 ```
 
+## MCP support
+
+This package ships an [MCP](https://modelcontextprotocol.io/) tool surface in `./mcp` for use with [`teslashibe/mcptool`](https://github.com/teslashibe/mcptool)-compatible hosts (e.g. [`teslashibe/agent-setup`](https://github.com/teslashibe/agent-setup)). 8 tools cover the full `*viral.Scorer` API: text/post/author/batch scoring, LLM-assisted optimization (`text` and structured `post` variants), standalone-prompt generation, and weight introspection. The platform identifier is `xviral` — distinct from `x-go`'s `x_` namespace — so tools are named `xviral_score_text`, `xviral_optimize_post`, etc.
+
+```go
+import (
+    "github.com/teslashibe/mcptool"
+    viral "github.com/teslashibe/x-viral-go"
+    xvmcp "github.com/teslashibe/x-viral-go/mcp"
+)
+
+scorer := viral.New(viral.WithLLMProvider(myProvider))
+provider := xvmcp.Provider{}
+for _, tool := range provider.Tools() {
+    // register tool with your MCP server, passing scorer as the
+    // opaque client argument when invoking
+}
+```
+
+The `xviral_optimize_*` tools require a `viral.LLMProvider` to be configured on the `*Scorer` the host passes in; the other tools are pure local computation and need no LLM.
+
+A coverage test in `mcp/mcp_test.go` fails if a new exported method is added to `*Scorer` without either being wrapped by an MCP tool or being added to `mcp.Excluded` with a reason — keeping the MCP surface in lockstep with the package API is enforced by CI rather than convention.
+
 ## Zero Dependencies
 
-stdlib only. No OpenAI SDK, no HTTP clients, no external packages. Scoring is pure local computation.
+The core scoring package is stdlib only — no OpenAI SDK, no HTTP clients, no external packages. Scoring is pure local computation. (The optional `./mcp` subpackage opts into `teslashibe/mcptool` for tool-schema reflection; nothing in the root package imports it.)
